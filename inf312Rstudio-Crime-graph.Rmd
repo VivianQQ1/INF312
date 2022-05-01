@@ -1,0 +1,244 @@
+---
+title: "Graphs"
+author: "Vivian"
+date: '2022-04-28'
+output: pdf_document
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(gridExtra)
+crime <- read.csv('neighbourhood-crime-rates - 4326.csv')
+
+#Clean Data
+crime1 <- crime %>% 
+  select(Assault_Rate2020, Neighbourhood)
+crime2 <- crime %>%
+  select(Assault_Rate2019)
+crime3 <- crime %>%
+  select(Hood_ID)
+shooting_2014<- crime %>%
+  select(Shootings_2014)
+shooting_2015<- crime %>%
+  select(Shootings_2015)
+shooting_2016<- crime %>%
+  select(Shootings_2016)
+shooting_2017<- crime %>%
+  select(Shootings_2017)
+shooting_2018<- crime %>%
+  select(Shootings_2018)
+shooting_2019<- crime %>%
+  select(Shootings_2019)
+shooting_2020<- crime %>%
+  select(Shootings_2020)
+```
+
+```{r, fig.align='center', fig.dim=c(9, 4)}
+crime <- c(163.3175, 1126.2670, 534.5530, 
+           888.3827, 379.4236, 437.1038, 
+           359.5275, 511.5089, 399.6938, 
+           303.9019 )
+crime1 <- c("Yonge-St.Clair", "York University Heights", "Lansing-Westgate", 
+            "Yorkdale-Glen Park", "Stonegate-Queensway", "Tam O'Shanter-Sullivan", 
+            "The Beaches", "Thistletown-Beaumond Heights", "Thorncliffe Park", 
+            "Danforth East York")
+barplot(crime, main = "Assult rate in 2020",
+        names.arg = crime1,
+        family = 'GB1'
+        )
+```
+
+```{r}
+#1. Histogram (By Location)
+Highest_Assault_2020 <- crime1 %>%
+  slice_max(Assault_Rate2020, n = 10) # selecting 10 states with the highest assault rate
+
+Highest_Assault_2020_graph <- Highest_Assault_2020 %>%
+  ggplot(aes(x = Neighbourhood, y = Assault_Rate2020, fill = Neighbourhood)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = 'none',
+        text = element_text(size = 10)) +
+  labs(x = "Neighbourhood",
+       y = "Assault Rate in 2020",
+       title = "10 Neighbourhoods With Highest Assault Rate in 2020")
+
+grid.arrange(Highest_Assault_2020_graph, ncol=1)
+```
+
+```{r}
+#2. Histogram (By time)
+shooting_sum <- c(sum(shooting_2014), sum(shooting_2015), sum(shooting_2016), sum(shooting_2017), sum(shooting_2018), sum(shooting_2019), sum(shooting_2020))
+
+years <- c("2014", "2015", "2016", "2017", "2018", "2019", "2020")
+
+shootings_by_years <- data_frame(shooting_sum, years)
+
+shooting_graph <- shootings_by_years%>%
+  ggplot(aes(x = years, y = shooting_sum, fill = years)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  labs(x = "Years",
+       y = "Shootings",
+       title = "Shootings per year in past 7 years")
+
+grid.arrange(shooting_graph, ncol=1)
+
+
+```
+
+```{r}
+#2018 max
+assault_rate_2018 <- crime %>%
+  select(Assault_Rate2018)
+auto_2018 <- crime %>%
+  select(AutoTheft_Rate2018)
+be_2018 <- crime %>%
+  select(BreakAndEnter_Rate2018)
+robbery_2018 <- crime %>%
+  select(Robbery_Rate2018)
+theft_over_2018 <- crime %>%
+  select(TheftOver_Rate2018)
+homi_2018 <- crime %>%
+  select(Homicide_Rate2018)
+sh_2018 <- crime %>%
+  select(Shootings_Rate2018)
+
+as_avg_2018 <- sum(assault_rate_2018)/140
+
+au_avg_2018 <- sum(auto_2018)/140
+
+be_avg_2018 <- sum(be_2018)/140
+
+robbery_avg_2018 <- sum(robbery_2018)/140
+
+theft_over_avg_2018 <- sum(theft_over_2018)/140
+
+homi_avg_2018 <- sum(homi_2018)/140
+
+sh_avg_2018 <- sum(sh_2018)/140
+
+c <- max(as_avg_2018, au_avg_2018, be_avg_2018, robbery_avg_2018, theft_over_avg_2018, homi_avg_2018, sh_avg_2018)
+max_type_2018 <- 'N/A'
+
+if (c == as_avg_2018){
+  max_type_2018 <- "Assault"
+} else if (c == au_avg_2018){
+  max_type_2018 <- "Auto Theft"
+} else if (c == be_avg_2018){
+  max_type_2018 <- "Break and Enter"
+} else if (c == robbery_avg_2018){
+  max_type_2018 <- "Robbery"
+} else if (c == theft_over_avg_2018){
+  max_type_2018 <- "Theft Over"
+} else if (c == homi_avg_2018){
+  max_type_2018  <- "Homicide"
+} else if (c == sh_avg_2018){
+  max_type_2018 <- "Shooting"
+}
+
+#2019 max
+assault_rate_2019 <- crime %>%
+  select(Assault_Rate2019)
+auto_2019 <- crime %>%
+  select(AutoTheft_Rate2019)
+be_2019 <- crime %>%
+  select(BreakAndEnter_Rate2019)
+robbery_2019 <- crime %>%
+  select(Robbery_Rate2019)
+theft_over_2019 <- crime %>%
+  select(TheftOver_Rate2019)
+homi_2019 <- crime %>%
+  select(Homicide_Rate2019)
+sh_2019 <- crime %>%
+  select(Shootings_Rate2019)
+
+as_avg_2019 <- sum(assault_rate_2019)/140
+
+au_avg_2019 <- sum(auto_2019)/140
+
+be_avg_2019 <- sum(be_2019)/140
+
+robbery_avg_2019 <- sum(robbery_2019)/140
+
+theft_over_avg_2019 <- sum(theft_over_2019)/140
+
+homi_avg_2019 <- sum(homi_2019)/140
+
+sh_avg_2019 <- sum(sh_2019)/140
+
+c <- max(as_avg_2019, au_avg_2019, be_avg_2019, robbery_avg_2019, theft_over_avg_2019, homi_avg_2019, sh_avg_2019)
+max_type_2019 <- 'N/A'
+
+if (c == as_avg_2019){
+  max_type_2019 <- "Assault"
+} else if (c == au_avg_2019){
+  max_type_2019 <- "Auto Theft"
+} else if (c == be_avg_2019){
+  max_type_2019 <- "Break and Enter"
+} else if (c == robbery_avg_2019){
+  max_type_2019 <- "Robbery"
+} else if (c == theft_over_avg_2019){
+  max_type_2019 <- "Theft Over"
+} else if (c == homi_avg_2019){
+  max_type_2019 <- "Homicide"
+} else if (c == sh_avg_2019){
+  max_type_2019 <- "Shooting"
+}
+
+#2020 max
+
+assault_rate_2020 <- crime %>%
+  select(Assault_Rate2020)
+auto_2020 <- crime %>%
+  select(AutoTheft_Rate2020)
+be_2020 <- crime %>%
+  select(BreakAndEnter_Rate2020)
+robbery_2020 <- crime %>%
+  select(Robbery_Rate2020)
+theft_over_2020 <- crime %>%
+  select(TheftOver_Rate2020)
+homi_2020 <- crime %>%
+  select(Homicide_Rate2020)
+sh_2020 <- crime %>%
+  select(Shootings_Rate2020)
+
+as_avg_2020 <- sum(assault_rate_2020)/140
+
+au_avg_2020 <- sum(auto_2020)/140
+
+be_avg_2020 <- sum(be_2020)/14
+robbery_avg_2020 <- sum(robbery_2020)/140
+
+theft_over_avg_2020 <- sum(theft_over_2020)/140
+
+homi_avg_2020 <- sum(homi_2020)/140
+
+sh_avg_2020 <- sum(sh_2020)/140
+
+c <- max(as_avg_2020, au_avg_2020, be_avg_2020, robbery_avg_2020, theft_over_avg_2020, homi_avg_2020, sh_avg_2020)
+max_type_2020 <- 'N/A'
+
+if (c == as_avg_2020){
+  max_type_2020 <- "Assault"
+} else if (c == au_avg_2020){
+  max_type_2020 <- "Auto Theft"
+} else if (c == be_avg_2020){
+  max_type_2020 <- "Break and Enter"
+} else if (c == robbery_avg_2020){
+  max_type_2020 <- "Robbery"
+} else if (c == theft_over_avg_2020){
+  max_type_2020 <- "Theft Over"
+} else if (c == homi_avg_2020){
+  max_type_2020 <- "Homicide"
+} else if (c == sh_avg_2020){
+  max_type_2020 <- "Shooting"
+}
+
+
+table_max <- tibble('2018' = max_type_2018,
+            '2019' = max_type_2019,
+            '2020' = max_type_2020)
+table_max
+```
